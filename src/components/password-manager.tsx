@@ -6,39 +6,63 @@ import { Card, CardContent } from '@/components/ui/card';
 import { PasswordStrengthIndicator } from '@/components/password-strength-indicator';
 import { PasswordGenerator } from '@/components/password-generator';
 import { AiSuggestions } from '@/components/ai-suggestions';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Copy } from 'lucide-react';
 import { Button } from './ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 export default function PasswordManager() {
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState('P@ssw0rd123!');
   const [showPassword, setShowPassword] = useState(false);
+  const { toast } = useToast();
+
+  const handleCopy = () => {
+    if (password) {
+      navigator.clipboard.writeText(password);
+      toast({
+        title: "Copied!",
+        description: "Password has been copied to your clipboard.",
+      });
+    }
+  };
+
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardContent className="pt-6">
+    <div className="space-y-8">
+      <Card className="bg-card/50 backdrop-blur-sm">
+        <CardContent className="p-6">
           <div className="relative">
             <Input
               type={showPassword ? 'text' : 'password'}
-              placeholder="Enter your password"
+              placeholder="Enter or generate a password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="pr-12 text-lg h-12"
+              className="pr-24 text-lg h-14"
             />
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-1/2 right-2 -translate-y-1/2 h-8 w-8 text-muted-foreground"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </Button>
+            <div className="absolute top-1/2 right-3 -translate-y-1/2 flex items-center space-x-2">
+               <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 text-muted-foreground"
+                onClick={handleCopy}
+                disabled={!password}
+              >
+                <Copy size={20} />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 text-muted-foreground"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </Button>
+            </div>
           </div>
           <PasswordStrengthIndicator password={password} />
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <PasswordGenerator onPasswordGenerated={setPassword} />
         <AiSuggestions password={password} />
       </div>

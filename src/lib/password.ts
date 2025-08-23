@@ -82,7 +82,6 @@ export function generatePassword(options: GenerationOptions): string {
   };
 
   let availableChars = charSets.lowercase;
-  let password = '';
   const requiredChars: string[] = [getRandomChar(charSets.lowercase)];
 
   if (includeUppercase) {
@@ -97,25 +96,20 @@ export function generatePassword(options: GenerationOptions): string {
     availableChars += charSets.symbols;
     requiredChars.push(getRandomChar(charSets.symbols));
   }
+  
+  let passwordArray = [...requiredChars];
 
   for (let i = requiredChars.length; i < length; i++) {
-    password += getRandomChar(availableChars);
+    passwordArray.push(getRandomChar(availableChars));
   }
 
-  // Shuffle required characters into the generated password for randomness
-  password.split('').forEach((char, i) => {
-    const j = Math.floor(Math.random() * (i + 1));
-    [password[i], password[j]] = [password[j], password[i]];
-  });
-  
-  // Combine and shuffle
-  const finalPasswordArray = (password + requiredChars.join('')).split('');
-  for (let i = finalPasswordArray.length - 1; i > 0; i--) {
+  // Shuffle the final password array
+  for (let i = passwordArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [finalPasswordArray[i], finalPasswordArray[j]] = [finalPasswordArray[j], finalPasswordArray[i]];
+      [passwordArray[i], passwordArray[j]] = [passwordArray[j], passwordArray[i]];
   }
 
-  return finalPasswordArray.join('');
+  return passwordArray.join('');
 }
 
 function getRandomChar(str: string): string {
