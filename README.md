@@ -87,3 +87,6 @@ The application will be available at `http://localhost:9002`.
 ```
 
 This should give you a great starting point. The application is now faster, looks much better, and has a proper guide.
+---
+
+Built by Girish Lade — https://ladestack.in
